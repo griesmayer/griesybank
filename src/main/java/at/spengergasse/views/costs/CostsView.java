@@ -1,15 +1,20 @@
 package at.spengergasse.views.costs;
 
+import at.spengergasse.views.home.HomeView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
+
+import java.util.OptionalDouble;
 
 @PageTitle("Costs")
 @Route("costs")
@@ -18,48 +23,51 @@ public class CostsView extends VerticalLayout {
 
     public CostsView() {
         setSpacing(true);
+        
 
-        H1 companyName = new H1("Griesy Bank");
-        companyName.getStyle()
-                .set("font-family", "cursive")
-                .set("font-size", "6rem")
-                .set("margin", "0");
-        add(companyName);
-
-        H2 subtitle = new H2("... the best bank ...");
-        subtitle.getStyle()
-                .set("margin", "0")
-                .set("color", "gray");
-        add(subtitle);
+        add(HomeView.getHeader());
 
         H2 costs = new H2("Transfer Costs");
+        add(costs);
 
-        H2 zone0 = new H2("Inland");
-        Paragraph cost0 = new Paragraph("Kosten: 0 Euro");
-        Paragraph max0  = new Paragraph("maximaler Betrag: unlimitiert");
+        Component card0 = getCard("Inland", 0, OptionalDouble.empty());
+        Component card1 = getCard("Deutschland", 2, OptionalDouble.of(1000));
+        Component card2 = getCard("Europa", 4, OptionalDouble.of(500));
+        Component card3 = getCard("USA", 6, OptionalDouble.of(400));
+        Component card4 = getCard("Welt", 15, OptionalDouble.of(200));
 
-        H2 zone1 = new H2("Deutschland");
-        Paragraph cost1 = new Paragraph("Kosten: 2 Euro");
-        Paragraph max1  = new Paragraph("maximaler Betrag: 1000 Euro");
+        FlexLayout cards = new FlexLayout(card0, card1, card2, card3, card4);
+        cards.setWidthFull();
+        cards.setJustifyContentMode(JustifyContentMode.CENTER);
+        cards.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+        add(cards);
 
-        H2 zone2 = new H2("Europa");
-        Paragraph cost2 = new Paragraph("Kosten: 4 Euro");
-        Paragraph max2  = new Paragraph("maximaler Betrag: 500 Euro");
+        Paragraph info = new Paragraph("Überweisungen werden am nächsten Tag durchgeführt!");
+        info.setWidth("100%");
+        info.getStyle().set("text-align", "center");
+        add(info);
+    }
 
-        H2 zone3 = new H2("USA");
-        Paragraph cost3 = new Paragraph("Kosten: 6 Euro");
-        Paragraph max3  = new Paragraph("maximaler Betrag: 400 Euro");
+    private VerticalLayout getCard(String country, double cost, OptionalDouble max) {
+        Paragraph maxText;
+        VerticalLayout card;
 
-        H2 zone4 = new H2("Welt");
-        Paragraph cost4 = new Paragraph("Kosten: 15 Euro");
-        Paragraph max4  = new Paragraph("maximaler Betrag: 200 Euro");
+        H2 zone = new H2(country);
+        Paragraph costText = new Paragraph("Kosten: " + cost + " Euro");
+        if (max.isPresent())
+            maxText  = new Paragraph("maximaler Betrag: " + max.getAsDouble() + " Euro");
+        else
+            maxText  = new Paragraph("maximaler Betrag: unlimitiert");
+        card = new VerticalLayout(zone, costText, maxText);
+        card.setWidth("350px");
+        card.setPadding(true);
+        card.setSpacing(false);
 
-        add (costs,
-                zone0, cost0, max0,
-                zone1, cost1, max1,
-                zone2, cost2, max2,
-                zone3, cost3, max3,
-                zone4, cost4, max4);
+        card.getStyle()
+                .set("border", "1px solid lightgray")
+                .set("border-radius", "10px")
+                .set("margin", "10px");
+        return card;
     }
 
 }
