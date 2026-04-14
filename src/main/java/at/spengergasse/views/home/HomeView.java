@@ -17,7 +17,6 @@ public class HomeView extends VerticalLayout {
 
     public HomeView() {
         setSpacing(true);
-        setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         add(getHeader());
@@ -49,7 +48,7 @@ public class HomeView extends VerticalLayout {
                 .set("text-align", "left");
 
         HorizontalLayout logoText = new HorizontalLayout(img, new VerticalLayout(p1, p2, p3, p4));
-        logoText.setWidth("500px");
+        logoText.setWidth("1000px");
         add(logoText);
 
         H3 name = new H3("Griesy Bank GmbH");
@@ -73,6 +72,9 @@ public class HomeView extends VerticalLayout {
                 .set("color", "gray");
 
         VerticalLayout header = new VerticalLayout(companyName, subtitle);
+        header.setSpacing(false);
+        header.setPadding(false);
+        header.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         return header;
     }
 
