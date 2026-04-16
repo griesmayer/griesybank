@@ -11,4 +11,10 @@ class BankServiceTest {
         BankService spar = new BankService();
         System.out.println(spar);
     }
+
+    @Test
+    public void testFindAll() {
+        BankService bank = new BankService();
+        System.out.println(bank.findAll());
+    }
 }

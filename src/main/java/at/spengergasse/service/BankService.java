@@ -41,6 +41,12 @@ public class BankService {
         }
     }
 
+    public ArrayList<Account> findAll() {
+        ArrayList<Account> copy;
+        copy = new ArrayList<>(accounts);
+        return copy;
+    }
+
     @Override
     public String toString() {
         return accounts.stream()
