@@ -53,4 +53,8 @@ public class BankService {
                 .map(s -> s.toString())
                 .collect(Collectors.joining("\n"));
     }
+
+    public void removeAllAccouts() {
+        accounts.clear();
+    }
 }
