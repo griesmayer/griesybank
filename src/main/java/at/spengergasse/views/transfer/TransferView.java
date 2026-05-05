@@ -70,6 +70,12 @@ public class TransferView extends VerticalLayout {
         })
                 .setHeader("Active")
                 .setSortable(true);
+        grid.addComponentColumn(a -> new Button("Delete", e -> remove1(a.getAccountId())))
+                .setHeader("Action")
+                .setSortable(false);
+        grid.addComponentColumn(a -> new Button("Add 100 EUR", e-> add100Eur(a.getAccountId())))
+                .setHeader("Action")
+                .setSortable(false);
 
         setSizeFull();
         grid.setSizeFull();
@@ -81,6 +87,26 @@ public class TransferView extends VerticalLayout {
         add(buttons);
         add(grid);
         reload();
+    }
+
+    private void add100Eur(Long accountId) {
+        try {
+            bankService.add100Eur(accountId);
+            reload();
+        }
+        catch (AccountException e) {
+            Notification.show(e.getMessage());
+        }
+    }
+
+    private void remove1(Long accountId) {
+        try {
+            bankService.remove1(accountId);
+            reload();
+        }
+        catch (AccountException e) {
+            Notification.show(e.getMessage());
+        }
     }
 
     private void addWrongAccount() {

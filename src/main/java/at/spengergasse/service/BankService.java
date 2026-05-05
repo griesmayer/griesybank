@@ -1,6 +1,7 @@
 package at.spengergasse.service;
 
 import at.spengergasse.domain.Account;
+import at.spengergasse.domain.AccountException;
 import com.github.javafaker.Faker;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -60,5 +62,39 @@ public class BankService {
 
     public void addAccount(Account a) {
         accounts.add(a);
+    }
+
+    public void remove1(Long accountId) {
+        if (accountId == null)
+            throw new AccountException("Fehler: kein Account!");
+        boolean gef = accounts.removeIf(a -> a.getAccountId().equals(accountId));
+        if (! gef)
+            throw new AccountException("Fehler: Account nicht gefunden!");
+    }
+
+    public void remove1Old(Long accountId) {
+        boolean gef;
+        Account a;
+        Iterator<Account> it;
+
+        if (accountId == null)
+            throw new AccountException("Fehler: kein Account!");
+        gef = false;
+        it = accounts.iterator();
+        while (it.hasNext()) {
+            a = it.next();
+            if (a.getAccountId().equals(accountId)) {
+                it.remove();
+                gef = true;
+            }
+        }
+        if (gef == false)
+            throw new AccountException("Fehler: Account nicht gefunden!");
+    }
+
+    public void add100Eur(Long accountId) {
+        accounts.stream()
+                .filter(a -> a.getAccountId().equals(accountId))
+                .forEach(a -> a.setAmount(a.getAmount()+100));
     }
 }
