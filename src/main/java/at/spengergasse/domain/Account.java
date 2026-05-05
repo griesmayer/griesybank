@@ -2,6 +2,7 @@ package at.spengergasse.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,14 +22,30 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Account implements Cloneable {
     @Id
     private Long      accountId;
+
+    @NotEmpty(message = "FirstName is required!")
+    @Size(min = 3, max = 40, message = "FirstName min 3 max 40 charters")
     private String    firstName;
+
+    @NotNull(message = "Opening Date is required!")
+    @PastOrPresent(message = "Opening date must be in the past or present!")
     private LocalDate openingDate;
+
+    @NotBlank(message = "Account Type is required!")
+    @Pattern(
+            regexp = "Checking|Savings|Fixed Deposit|Business|Joint",
+            message = "Invalid account type"
+    )
     private String    accountType;
+
+    @NotNull(message = "Amount is required!")
+    @DecimalMin(value = "-1000.0", message = "Fehler: über dem Creditlimit!")
+    @DecimalMax(value = "100000.0", message = "Fehler: max 100.000 Euro!")
     private Double    amount;
+
     private Boolean   active;
 
     private static final AtomicLong sequence = new AtomicLong(1000);
-    private static final String[] accounttypes = { "Checking", "Savings", "Fixed Deposit", "Business", "Joint" };
 
     public Account() {
         setAccountId ();
@@ -59,20 +76,6 @@ public class Account implements Cloneable {
 
     public void setAccountId() {
         accountId = sequence.getAndIncrement();
-    }
-
-    public void setAmount(Double amount) {
-        if (amount.doubleValue() < -1000)
-            throw new AccountException("Fehler: über dem Creditlimit!");
-        if (amount.doubleValue() > 100000)
-            throw new AccountException("Fehler: max 100.000 Euro!");
-        this.amount = amount;
-    }
-
-    public void setAccountType(String accountType) {
-        if (! Arrays.asList(accounttypes).contains(accountType))
-            throw new AccountException("Fehler: falscher Account Type!");
-        this.accountType = accountType;
     }
 
     @Override
